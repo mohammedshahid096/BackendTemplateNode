@@ -1,0 +1,64 @@
+const express = require("express");
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
+const cors = require("cors");
+const MongoDataBaseConn = require("./src/Config/db.config");
+const IndexRoutes = require("./src/Routes/Index.route");
+const { morganFilePath, morganFormat } = require("./src/Config/morgan.config");
+const { ratelimitConfig } = require("./src/Config/ratelimit.config");
+const corsConfig = require("./src/Config/cors.config");
+
+const app = express();
+
+//   env load
+dotenv.config();
+
+//----------------------------------------
+//------------ config --------------------
+//----------------------------------------
+// MongoDataBaseConn
+app.use(ratelimitConfig);
+app.use(morgan(morganFormat.COMBINE, { stream: morganFilePath }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(cors(corsConfig));
+
+//----------------------------------------
+//--------------- Routes -----------------
+//----------------------------------------
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Welcome Message",
+  });
+});
+
+app.use("/api/v1", IndexRoutes);
+
+//----------------------------------------
+//--------------- others -----------------
+//----------------------------------------
+// if no routes findout
+app.use("*", (req, res) => {
+  res.status(500).json({
+    success: false,
+    statusCode: 500,
+    url: req.baseUrl,
+    type: req.method,
+    message: "API not found",
+  });
+});
+
+// response for error message
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    success: false,
+    statusCode: err.status || 500,
+    message: err.message || "internal server error",
+    stack: err.stack || "not present",
+  });
+});
+
+module.exports = app;
