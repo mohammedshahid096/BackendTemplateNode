@@ -1,3 +1,7 @@
+const dotenv = require("dotenv");
+//   env load
+dotenv.config();
+
 module.exports = {
   SERVER_PORT: process.env.PORT || 8001,
   DEVELOPMENT_MODE: process.env.DEVELOPMENT_MODE,
