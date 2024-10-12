@@ -1,25 +1,31 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
 const cors = require("cors");
 const MongoDataBaseConn = require("./src/Config/db.config");
 const IndexRoutes = require("./src/Routes/Index.route");
-const { morganFilePath, morganFormat } = require("./src/Config/morgan.config");
 const { ratelimitConfig } = require("./src/Config/ratelimit.config");
 const corsConfig = require("./src/Config/cors.config");
 
 const app = express();
 
-//   env load
-dotenv.config();
 
 //----------------------------------------
 //------------ config --------------------
 //----------------------------------------
 // MongoDataBaseConn
+// MongoDataBaseConn()
+
+
+if (DEVELOPMENT_MODE === "development") {
+  const morgan = require("morgan");
+  const {
+    morganFilePath,
+    morganFormat,
+  } = require("./src/Config/morgan.config");
+  app.use(morgan(morganFormat.COMBINE, { stream: morganFilePath }));
+}
+
 app.use(ratelimitConfig);
-app.use(morgan(morganFormat.COMBINE, { stream: morganFilePath }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
