@@ -5,11 +5,11 @@ const {
 } = require("../config/index.config");
 
 // generate the access token
-const createAccessToken = async (userId, type) => {
+const createAccessToken = async (userId, role) => {
   if (!userId) return Promise.reject(new Error("User  ID is required"));
   let payload = {
     id: userId,
-    __type__: type,
+    role,
   };
 
   const config = { expiresIn: ACCESS_TOKEN_KEY_TIME };
