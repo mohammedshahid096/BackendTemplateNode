@@ -1,70 +1,44 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const MongoDataBaseConn = require("./src/Config/db.config");
-const IndexRoutes = require("./src/Routes/Index.route");
-const { ratelimitConfig } = require("./src/Config/ratelimit.config");
-const corsConfig = require("./src/Config/cors.config");
+const compression = require("compression");
+let moment = require("moment-timezone");
+const MongoDataBaseConn = require("./src/config/db.config");
+const { DEVELOPMENT_MODE } = require("./src/config/index.config");
+const ratelimitConfig = require("./src/config/ratelimit.config");
+const corsConfig = require("./src/config/cors.config");
+const morganConfigFunction = require("./src/config/morgan.config");
+const helmetConfig = require("./src/config/helmet.config");
+const IndexRoutes = require("./src/routes/index.route");
+const errorHandling = require("./src/utils/errorHandling");
+const { runCronSchedulerFunction } = require("./src/config/cron.config");
 
 const app = express();
-
 
 //----------------------------------------
 //------------ config --------------------
 //----------------------------------------
 // MongoDataBaseConn
-// MongoDataBaseConn()
-
+MongoDataBaseConn();
 
 if (DEVELOPMENT_MODE === "development") {
-  const morgan = require("morgan");
-  const {
-    morganFilePath,
-    morganFormat,
-  } = require("./src/Config/morgan.config");
-  app.use(morgan(morganFormat.COMBINE, { stream: morganFilePath }));
+  app.use(morganConfigFunction());
+} else {
+  runCronSchedulerFunction();
 }
 
+app.use(helmetConfig);
 app.use(ratelimitConfig);
-app.use(express.json());
+app.use(compression({ level: 6 }));
+app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(cors(corsConfig));
+app.use(corsConfig);
+moment.tz.setDefault("Asia/Kolkata");
 
-//----------------------------------------
-//--------------- Routes -----------------
-//----------------------------------------
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Welcome Message",
-  });
-});
-
-app.use("/api/v1", IndexRoutes);
-
-//----------------------------------------
-//--------------- others -----------------
-//----------------------------------------
-// if no routes findout
-app.use("*", (req, res) => {
-  res.status(500).json({
-    success: false,
-    statusCode: 500,
-    url: req.baseUrl,
-    type: req.method,
-    message: "API not found",
-  });
-});
+// Routes
+app.use(IndexRoutes);
 
 // response for error message
 app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    success: false,
-    statusCode: err.status || 500,
-    message: err.message || "internal server error",
-    stack: err.stack || "not present",
-  });
+  errorHandling.handleMainErrorService(err, res);
 });
 
 module.exports = app;

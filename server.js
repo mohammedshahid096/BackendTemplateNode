@@ -1,6 +1,6 @@
 const app = require("./app");
-const logger = require("./src/Config/applogger.config");
-const { SERVER_PORT, DEVELOPMENT_MODE } = require("./src/Config/index.config");
+const logger = require("./src/config/logger.config");
+const { SERVER_PORT, DEVELOPMENT_MODE } = require("./src/config/index.config");
 
 function startServer() {
   app.listen(SERVER_PORT, () => {
