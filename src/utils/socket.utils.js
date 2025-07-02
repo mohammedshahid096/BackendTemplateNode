@@ -1,10 +1,10 @@
 const { getSocketIO } = require("../../socket.io");
-const logger = require("../Config/logger.config");
-const { admin_emit_listeners } = require("../Constants/socket.constants");
+const logger = require("../config/logger.config");
+const { admin_emit_listeners } = require("../constants/socket.constants");
 
 const emitNotificationToAdmin = ({ notificationData }) => {
   const io = getSocketIO();
-  logger.info("Utils - emitNotificationToAdmin - Start");
+  logger.info("utils - emitNotificationToAdmin - Start");
   if (io) {
     let admin_name_room = "edu_excellence_admin";
     const isEmitted = io
@@ -13,11 +13,11 @@ const emitNotificationToAdmin = ({ notificationData }) => {
         ...notificationData,
         timestamp: new Date(),
       });
-    logger.info("Utils - emitNotificationToAdmin - End");
+    logger.info("utils - emitNotificationToAdmin - End");
     return isEmitted;
   } else {
     logger.info(
-      "Utils - emitNotificationToAdmin - Error (Socket.IO instance not available)",
+      "utils - emitNotificationToAdmin - Error (Socket.IO instance not available)",
       error
     );
     return false;

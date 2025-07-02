@@ -2,10 +2,10 @@ const jwt = require("jsonwebtoken");
 const {
   ACCESS_TOKEN_KEY,
   ACCESS_TOKEN_KEY_TIME,
-} = require("../Config/index.config");
+} = require("../config/index.config");
 
 // generate the access token
-module.exports.CreateAccessToken = async (userId, type) => {
+const createAccessToken = async (userId, type) => {
   if (!userId) return Promise.reject(new Error("User  ID is required"));
   let payload = {
     id: userId,
@@ -19,11 +19,16 @@ module.exports.CreateAccessToken = async (userId, type) => {
 };
 
 // verifying the access token
-module.exports.VerifyAccessToken = async (token) => {
+const verifyAccessToken = async (token) => {
   try {
     let data = jwt.verify(token, ACCESS_TOKEN_KEY);
     return Promise.resolve({ success: true, ...data });
   } catch (error) {
     return Promise.resolve({ success: false, error });
   }
+};
+
+module.exports = {
+  createAccessToken,
+  verifyAccessToken,
 };

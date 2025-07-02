@@ -1,5 +1,5 @@
 const httpErrors = require("http-errors");
-const { VerifyAccessToken } = require("../Utils/jwt.token");
+const { verifyAccessToken } = require("../utils/jwt.token");
 
 // for authentication
 module.exports.Authentication = async (req, res, next) => {
@@ -9,7 +9,7 @@ module.exports.Authentication = async (req, res, next) => {
       return next(httpErrors.Unauthorized(errorConstant.NOT_AUTHENTICATED));
     }
 
-    const decode = await VerifyAccessToken(access_token);
+    const decode = await verifyAccessToken(access_token);
     if (!decode.success) {
       res.clearCookie("access_token");
       res.clearCookie("refresh_token");
