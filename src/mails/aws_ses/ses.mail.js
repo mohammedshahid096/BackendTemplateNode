@@ -8,11 +8,11 @@ const {
   AWS_SECRET_ACCESS_KEY,
   AWS_REGION,
   AWS_SES_SENDER,
-} = require("../../config/index.config");
+} = require("../../configtemp/index.config");
 const fs = require("fs");
 const path = require("path");
 const JsonTemplatesCollection = require("./ses.collection.json");
-const logger = require("../../config/logger.config");
+const logger = require("../../configtemp/logger.config");
 
 const getTemplateFromFile = async (fileName, placeholderData) => {
   const filePath = path.join(__dirname, "../", "templates", fileName);

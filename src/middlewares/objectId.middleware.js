@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const httpErrors = require("http-errors");
-const logger = require("../config/logger.config");
+const logger = require("../configtemp/logger.config");
 
 const ValidateObjectId = (key) => {
   return (req, res, next) => {
