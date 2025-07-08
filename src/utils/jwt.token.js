@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const {
   ACCESS_TOKEN_KEY,
   ACCESS_TOKEN_KEY_TIME,
-} = require("../configtemp/index.config");
+} = require("../config/index.config");
 
 // generate the access token
 const createAccessToken = async (userId, role) => {

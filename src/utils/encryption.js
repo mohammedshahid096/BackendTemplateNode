@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const { ENCRYPTION_KEY } = require("../configtemp/index.config");
+const { ENCRYPTION_KEY } = require("../config/index.config");
 
 // Should match frontend key and come from environment variables
 const decryptPasswordFunction = (encryptedData) => {

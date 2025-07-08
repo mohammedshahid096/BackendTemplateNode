@@ -5,11 +5,11 @@ const {
   NODEMAILER_PORT,
   NODEMAILER_PASS,
   NODEMAILER_USER,
-} = require("../../configtemp/index.config");
+} = require("../../config/index.config");
 const fs = require("fs");
 const path = require("path");
 const JsonTemplatesCollection = require("./templateCollection.json");
-const logger = require("../../configtemp/logger.config");
+const logger = require("../../config/logger.config");
 
 const getTemplateFromFile = async (fileName, placeholderData) => {
   const filePath = path.join(__dirname, "../", "templates", fileName);
